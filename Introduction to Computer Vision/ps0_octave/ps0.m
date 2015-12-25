@@ -38,3 +38,20 @@ swap_image = img2(:,:,1);
 swap_image(row2_start:row2_end,col2_start:col2_end) = ...
   img1_red(row1_start:row1_end,col1_start:col1_end);
 imwrite(swap_image,'output/ps0-3-a-1.png');     
+
+# Find image statistics
+g_min = min(min(img1_green));
+g_max = max(max(img1_green));
+g_mean = mean2(img1_green);
+g_std = std2(img1_green);
+
+new_green = (((img1_green .- g_mean) ./ g_std) .* 10) .+ g_mean;
+imwrite(new_green,'output/ps0-4-b-1.png');
+
+# Shift left by 2 pixels
+shift_green = shift(img1_green,2,2);
+imwrite(shift_green,'output/ps0-4-c-1.png');
+
+# Subtract shifted from original
+sub_green = img1_green .- shift_green;
+imwrite(sub_green,'output/ps0-4-d-1.png');
