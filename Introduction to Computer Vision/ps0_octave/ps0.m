@@ -55,3 +55,16 @@ imwrite(shift_green,'output/ps0-4-c-1.png');
 # Subtract shifted from original
 sub_green = img1_green .- shift_green;
 imwrite(sub_green,'output/ps0-4-d-1.png');
+
+# Add Gaussian noise to the green channel
+sigma = 20;
+green_noise = randn(size(img1_green)) .* sigma;
+noisy_green = img1;
+noisy_green(:,:,2) = noisy_green(:,:,2) .+ green_noise;
+imwrite(noisy_green,'output/ps0-5-a-1.png');
+
+# Add Gaussian noise to the blue channel
+blue_noise = randn(size(img1_blue)) .* sigma;
+noisy_blue = img1;
+noisy_blue(:,:,3) = noisy_green(:,:,3) .+ blue_noise;
+imwrite(noisy_blue,'output/ps0-5-b-1.png');
