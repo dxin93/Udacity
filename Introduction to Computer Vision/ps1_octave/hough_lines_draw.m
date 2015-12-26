@@ -8,4 +8,22 @@ function hough_lines_draw(img, outfile, peaks, rho, theta)
     % theta: Vector of theta values, in degrees
 
     % TODO: Your code here
+    imshow(img);
+    hold on;
+    for i = 1:rows(peaks)
+      r = rho(1,peaks(i,1));
+      t = theta(1,peaks(i,2));
+      
+      if t ~= 0
+        x = 1:columns(img);
+        y = (r - x*cosd(t))/sind(t);
+      else
+        x = ones(1, columns(img)) * r;
+        y = 1:rows(img); 
+      endif
+      plot(x,y, 'g-');
+    endfor
+    hold off;
+    
+    saveas(1,strcat('output/',outfile));
 endfunction

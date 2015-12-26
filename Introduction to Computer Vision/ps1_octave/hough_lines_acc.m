@@ -31,11 +31,12 @@ function [H, theta, rho] = hough_lines_acc(BW, varargin)
     for i = 1:rows(BW)
       for j = 1:columns(BW)
         if (BW(i,j) == 1)
-          t = atan2d(i,j);
-          theta_id = find(theta <= t, 1, 'last');
-          d = j*cosd(t) + i*sind(t);
-          rho_id = find(rho <= d, 1, 'last');
-          H(rho_id,theta_id) += 1;
+          for t = 1:columns(theta)
+            %theta_id = find(theta <= t, 1, 'last');
+            d = j*cosd(theta(1,t)) + i*sind(theta(1,t));
+            rho_id = find(rho <= d, 1, 'last');
+            H(rho_id,t) += 1;
+          endfor
         endif
       endfor
     endfor
