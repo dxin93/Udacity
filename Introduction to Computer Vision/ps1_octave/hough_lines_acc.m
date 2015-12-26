@@ -14,12 +14,30 @@ function [H, theta, rho] = hough_lines_acc(BW, varargin)
 
     %% Parse input arguments
     p = inputParser();
-    p = p.addParamValue('RhoResolution', 1);
-    p = p.addParamValue('Theta', linspace(-90, 89, 180));
-    p = p.parse(varargin{:});
-
+    p.addParamValue('RhoResolution', 1);
+    p.addParamValue('Theta', linspace(-90, 89, 180));
+    p.parse(varargin{:});
+    
     rhoStep = p.Results.RhoResolution;
+    D = sqrt((rows(BW) - 1)^2 + (columns(BW) - 1)^2);
+    nrho = 2 * (ceil(D/rhoStep)) + 1; 
+    diag = rhoStep * (ceil(D/rhoStep));
+    rho = linspace(-diag, diag, nrho);
+    
     theta = p.Results.Theta;
-
+  
+    H = zeros(nrho, columns(theta));
     %% TODO: Your code here
+    for i = 1:rows(BW)
+      for j = 1:columns(BW)
+        if (BW(i,j) == 1)
+          t = atan2d(i,j);
+          theta_id = find(theta <= t, 1, 'last');
+          d = j*cosd(t) + i*sind(t);
+          rho_id = find(rho <= d, 1, 'last');
+          H(rho_id,theta_id) += 1;
+        endif
+      endfor
+    endfor
+    
 endfunction
