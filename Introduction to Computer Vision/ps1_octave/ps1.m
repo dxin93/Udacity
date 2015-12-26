@@ -25,8 +25,8 @@ hough_lines_draw(img, 'ps1-2-c-1.png', peaks, rho, theta);
 
 %% 3-a
 img = imread(fullfile('input', 'ps1-input0-noise.png'));
-f_size = 25;
-f_sigma = 10;
+f_size = 20;
+f_sigma = 5;
 fil = fspecial('gaussian',f_size,f_sigma);
 filtered = imfilter(img,fil,'replicate');
 imwrite(filtered, fullfile('output', 'ps1-3-a-1.png'));
@@ -38,10 +38,10 @@ clean_edges = edge(filtered,'Canny');
 imwrite(clean_edges, fullfile('output', 'ps1-3-b-2.png'));
 
 %% 3-c
-[H, theta, rho] = hough_lines_acc(clean_edges);
+[H, theta, rho] = hough_lines_acc(clean_edges, 'Theta', [-90 0]);
 grayH = uint8(mat2gray(H) * 255);
 imshow(grayH, 'xData', theta, 'yData', rho);
-peaks = hough_peaks(H, 10); 
+peaks = hough_peaks(H, 10, 'Threshold', 0.25 * max(H(:)));
 hold on; plot(theta(peaks(:,2)), rho(peaks(:,1)),'rs'); hold off;
 saveas(1,'output/ps1-3-c-1.png');
 
