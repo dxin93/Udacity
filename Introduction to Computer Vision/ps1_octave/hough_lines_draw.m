@@ -25,5 +25,5 @@ function hough_lines_draw(img, outfile, peaks, rho, theta)
     endfor
     hold off;
     
-    saveas(1,strcat('output/',outfile));
+    saveas(1,fullfile('output', outfile));
 endfunction

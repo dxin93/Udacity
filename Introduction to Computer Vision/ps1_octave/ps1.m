@@ -20,4 +20,29 @@ hold on; plot(theta(peaks(:,2)), rho(peaks(:,1)),'rs'); hold off;
 saveas(1,'output/ps1-2-b-1.png');
 
 %% TODO: Rest of your code here
+%% 2-c
 hough_lines_draw(img, 'ps1-2-c-1.png', peaks, rho, theta);
+
+%% 3-a
+img = imread(fullfile('input', 'ps1-input0-noise.png'));
+f_size = 25;
+f_sigma = 10;
+fil = fspecial('gaussian',f_size,f_sigma);
+filtered = imfilter(img,fil,'replicate');
+imwrite(filtered, fullfile('output', 'ps1-3-a-1.png'));
+
+%% 3-b
+dirty_edges = edge(img,'Canny');
+imwrite(dirty_edges, fullfile('output', 'ps1-3-b-1.png'));
+clean_edges = edge(filtered,'Canny');
+imwrite(clean_edges, fullfile('output', 'ps1-3-b-2.png'));
+
+%% 3-c
+[H, theta, rho] = hough_lines_acc(clean_edges);
+grayH = uint8(mat2gray(H) * 255);
+imshow(grayH, 'xData', theta, 'yData', rho);
+peaks = hough_peaks(H, 10); 
+hold on; plot(theta(peaks(:,2)), rho(peaks(:,1)),'rs'); hold off;
+saveas(1,'output/ps1-3-c-1.png');
+
+hough_lines_draw(img, 'ps1-3-c-2.png', peaks, rho, theta);
