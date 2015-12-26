@@ -48,8 +48,8 @@ saveas(1,'output/ps1-3-c-1.png');
 hough_lines_draw(img, 'ps1-3-c-2.png', peaks, rho, theta);
 
 %% 4-a
-f_size = 15;
-f_sigma = 5;
+f_size = 20;
+f_sigma = 15;
 fil = fspecial('gaussian',f_size,f_sigma);
 img = rgb2gray(imread(fullfile('input', 'ps1-input1.png')));
 smooth = imfilter(img,fil,'replicate');
@@ -63,7 +63,7 @@ imwrite(smooth_edges, fullfile('output', 'ps1-4-b-1.png'));
 [H, theta, rho] = hough_lines_acc(smooth_edges, 'RhoResolution', 2);
 grayH = uint8(mat2gray(H) * 255);
 imshow(grayH, 'xData', theta, 'yData', rho);
-peaks = hough_peaks(H, 5, 'Threshold', 0.3 * max(H(:)),...
+peaks = hough_peaks(H, 5, 'Threshold', 0.45 * max(H(:)),...
                     'NHoodSize', floor(size(H) / 140.0) * 2 + 1);
 hold on; plot(theta(peaks(:,2)), rho(peaks(:,1)),'rs'); hold off;
 saveas(1,'output/ps1-4-c-1.png');
