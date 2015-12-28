@@ -27,16 +27,35 @@ function peaks = hough_peaks(H, varargin)
       local_max = sorted(1);
       
       if local_max >= threshold
-        [r,t] = find(H == local_max, 1);
+        if (ndims(H) == 2)
+          [r,t] = find(H == local_max, 1);
+        elseif (ndims(H) == 3)
+          temp = find(H == local_max, 1);
+          r = ceil(temp/(rows(H)*columns(H)));
+          temp = temp - (r-1) * (rows(H)*columns(H));
+          b = ceil(temp/rows(H));
+          a = temp - (b-1) * rows(H);
+        endif
         
-        NHoodY_Low = max([1 floor(r-nHoodSize(1))]);
-        NHoodY_High = min([rows(H) ceil(r+nHoodSize(1))]);
-        NHoodX_Low = max([1 floor(t-nHoodSize(2))]);
-        NHoodX_High = min([columns(H) ceil(t+nHoodSize(2))]);
+        if (ndims(H) == 2)
+          NHoodY_Low = max([1 floor(r-nHoodSize(1))]);
+          NHoodY_High = min([rows(H) ceil(r+nHoodSize(1))]);
+          NHoodX_Low = max([1 floor(t-nHoodSize(2))]);
+          NHoodX_High = min([columns(H) ceil(t+nHoodSize(2))]);
         
-        H(NHoodY_Low:NHoodY_High,NHoodX_Low:NHoodX_High) = 0;
-        
-        peaks = [peaks; r, t];
+          H(NHoodY_Low:NHoodY_High,NHoodX_Low:NHoodX_High) = 0;
+          peaks = [peaks; r, t];
+        elseif (ndims(H) == 3)
+          NHoodY_Low = max([1 floor(a-nHoodSize(1))]);
+          NHoodY_High = min([rows(H) ceil(a+nHoodSize(1))]);
+          NHoodX_Low = max([1 floor(b-nHoodSize(2))]);
+          NHoodX_High = min([columns(H) ceil(b+nHoodSize(2))]);
+          NHoodR_Low = max([1 (r-10)]);
+          NHoodR_High = min([size(H,3) (r+10)]);
+          
+          H(NHoodY_Low:NHoodY_High,NHoodX_Low:NHoodX_High,NHoodR_Low:NHoodR_High) = 0;
+          peaks = [peaks; a, b, r];
+        endif
       endif
     endfor
 endfunction

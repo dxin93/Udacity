@@ -69,3 +69,47 @@ hold on; plot(theta(peaks(:,2)), rho(peaks(:,1)),'rs'); hold off;
 saveas(1,'output/ps1-4-c-1.png');
 
 hough_lines_draw(img, 'ps1-4-c-2.png', peaks, rho, theta);
+
+%% 5-a
+f_size = 10;
+f_sigma = 5;
+fil = fspecial('gaussian',f_size,f_sigma);
+img = rgb2gray(imread(fullfile('input', 'ps1-input1.png')));
+smooth = imfilter(img,fil,'replicate');
+imwrite(smooth, fullfile('output', 'ps1-5-a-1.png'));
+
+img_edges = edge(smooth, 'Canny');
+imwrite(img_edges, fullfile('output', 'ps1-5-a-2.png'));
+
+H = hough_circles_acc(img_edges, 20);
+centers = hough_peaks(H, 12);
+imshow(img);
+hold on;
+t = linspace(0, 2*pi, 100);
+for i = 1:rows(centers)
+  a = centers(i,1);
+  b = centers(i,2);
+  
+  circsx = a + 20 .* cos(t);
+  circsy = b - 20 .* sin(t);
+  plot(circsx, circsy, 'g-');
+endfor
+hold off;
+saveas(1,'output/ps1-5-a-3.png');
+
+%% 5-b
+[centers, radii] = find_circles(img_edges, [20 50]);
+imshow(img);
+hold on;
+t = linspace(0, 2*pi, 100);
+for i = 1:rows(centers)
+  a = centers(i,1);
+  b = centers(i,2);
+  r = radii(i,1);
+  
+  circsx = a + r .* cos(t);
+  circsy = b - r .* sin(t);
+  plot(circsx, circsy, 'g-');
+endfor
+hold off;
+saveas(1,'output/ps1-5-b-1.png');
