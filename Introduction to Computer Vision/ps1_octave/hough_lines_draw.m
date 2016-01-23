@@ -18,7 +18,7 @@ function hough_lines_draw(img, outfile, peaks, rho, theta)
         x = 1:columns(img);
         y = (r - x*cosd(t))/sind(t);
       else
-        x = ones(1, columns(img)) * r;
+        x = ones(1, rows(img)) * r;
         y = 1:rows(img); 
       endif
       plot(x,y, 'g-');

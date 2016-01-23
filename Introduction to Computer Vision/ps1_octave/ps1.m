@@ -113,3 +113,17 @@ for i = 1:rows(centers)
 endfor
 hold off;
 saveas(1,'output/ps1-5-b-1.png');
+
+%% 6-a
+img = rgb2gray(imread(fullfile('input', 'ps1-input2.png')));
+f_size = 40;
+f_sigma = 10;
+fil = fspecial('gaussian',f_size,f_sigma);
+smooth = imfilter(img,fil,'replicate');
+img_edges = edge(smooth, 'Canny');
+
+[H, theta, rho] = hough_lines_acc(img_edges, 'RhoResolution', 2);
+peaks = hough_peaks(H, 18, 'Threshold', 0.4 * max(H(:)),...
+                    'NHoodSize', floor(size(H) / 140.0) * 2 + 1);
+
+hough_lines_draw(smooth, 'ps1-6-a-1.png', peaks, rho, theta);
